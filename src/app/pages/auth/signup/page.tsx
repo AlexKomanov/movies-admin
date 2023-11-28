@@ -22,7 +22,7 @@ const SignupPage = () => {
       if (response.ok) {
         const data = await response.json();
         // Handle successful login, e.g., store adminAuthToken in a secure way
-        console.log('Admin login successful', data);
+        console.log('Admin registered successfully', data);
 
         toast.success('Admin Registered Successfully!!!', {
           position: toast.POSITION.TOP_CENTER,
