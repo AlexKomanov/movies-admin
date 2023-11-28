@@ -1,9 +1,150 @@
-import React from 'react'
+"use client"
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
-const page = () => {
+interface Movie {
+  title: string;
+  description: string;
+  portraitImgUrl: string;
+  portraitImg: File | null;
+  landscapeImgUrl: string;
+  landscapeImg: File | null;
+  rating: number;
+  genre: string[];
+  duration: number;
+}
+
+const CreateMoviePage = () => {
+
+  const [movie, setMovie] = useState<Movie>({
+    title: "",
+    description: "",
+    portraitImgUrl: "",
+    portraitImg: null,
+    landscapeImgUrl: "",
+    landscapeImg: null,
+    rating: 0,
+    genre: [],
+    duration: 0,
+  });
+
+  const genres = [
+    "Action",
+    "Comedy",
+    "Drama",
+    "Fantasy",
+    "Horror",
+    "Science Fiction",
+    "Thriller",
+    "Other",
+  ];
+
+  const handleGenreChange = (genre: string) => {
+    if (movie.genre.includes(genre)) {
+      setMovie({
+        ...movie,
+        genre: movie.genre.filter((selectedGenre) => selectedGenre !== genre),
+      });
+    }
+    else {
+      setMovie({ ...movie, genre: [...movie.genre, genre] });
+
+    }
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setMovie({ ...movie, [name]: value });
+  };
+
+  const uploadImage = async (image: File) => { };
+
+  const handleCreateMovie = async () => { };
+
   return (
-    <div>page</div>
+    <div className="formpage">
+      <input
+        type="text"
+        name="title"
+        placeholder="Title"
+        value={movie.title}
+        onChange={handleInputChange}
+      />
+      <br />
+      <input
+        type="text"
+        name="description"
+        placeholder="Description"
+        value={movie.description}
+        onChange={handleInputChange}
+      />
+      <br />
+      <label>Portrait Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(event) => {
+          if (event.target.files && event.target.files.length > 0) {
+            setMovie({ ...movie, portraitImg: event.target.files[0] })
+          }
+        }}
+      />
+
+      <br />
+      <label>Landscape Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(event) => {
+          if (event.target.files && event.target.files.length > 0) {
+            setMovie({ ...movie, landscapeImg: event.target.files[0] })
+          }
+        }}
+      />
+
+      <br />
+      <label>Rating</label>
+      <input
+        type="number"
+        name="rating"
+        placeholder="Rating"
+        value={movie.rating}
+        onChange={handleInputChange}
+      />
+      <br />
+
+      <div>
+        <p>Select Genres:</p>
+        {genres.map((genre) => (
+          <label key={genre}>
+            <input
+              type="checkbox"
+              name="genre"
+              checked={movie.genre.includes(genre)}
+              onChange={() => handleGenreChange(genre)}
+            />
+            {genre}
+          </label>
+        ))}
+      </div>
+
+      <br />
+
+      <label>Duration</label>
+      <input
+        type="number"
+        name="duration"
+        placeholder="Duration"
+        value={movie.duration}
+        onChange={handleInputChange}
+      />
+      <br />
+
+      <button onClick={handleCreateMovie}>Create Movie</button>
+
+
+    </div>
   )
 }
 
-export default page
+export default CreateMoviePage
