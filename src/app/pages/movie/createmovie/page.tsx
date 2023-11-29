@@ -57,7 +57,35 @@ const CreateMoviePage = () => {
     setMovie({ ...movie, [name]: value });
   };
 
-  const uploadImage = async (image: File) => { };
+  const uploadImage = async (image: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("myimage", image)
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/image/uploadimage`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Image uploaded successfully:", data);
+        return data.imageUrl;
+      } else {
+        console.error("Failed to upload the image.");
+        return null;
+      }
+
+    }
+    catch (error) {
+      console.log("Error", error);
+      return null;
+
+    }
+  };
 
   const handleCreateMovie = async () => { };
 
