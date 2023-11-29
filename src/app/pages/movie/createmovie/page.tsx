@@ -87,7 +87,80 @@ const CreateMoviePage = () => {
     }
   };
 
-  const handleCreateMovie = async () => { };
+  const handleCreateMovie = async () => {
+
+    try {
+      if (
+        movie.title === "" ||
+        movie.description === "" ||
+        movie.rating === 0 ||
+        movie.genre.length === 0 ||
+        movie.duration === 0
+      ) {
+        toast.error("Please fill all the required fields", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        return;
+      }
+
+      let portraitImgUrl = movie.portraitImgUrl;
+      let landscapeImgUrl = movie.landscapeImgUrl;
+
+      if (movie.portraitImg) {
+        portraitImgUrl = await uploadImage(movie.portraitImg);
+        if (!portraitImgUrl) {
+          toast.error("Portrait Image upload failed", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          return;
+        }
+      }
+      if (movie.landscapeImg) {
+        landscapeImgUrl = await uploadImage(movie.landscapeImg);
+        if (!landscapeImgUrl) {
+          toast.error("Landscape Image upload failed", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          return;
+        }
+      }
+
+      const newMovie = { ...movie, portraitImgUrl, landscapeImgUrl };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/movie/createmovie`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newMovie),
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Movie creation successful", data);
+
+        toast.success("Movie Created Successfully", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+      else {
+        console.error("Movie creation failed", response.statusText);
+        toast.error("Movie Creation Failed", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+
+    }
+    catch (error) {
+      console.error("An error occurred during a movie creation", error);
+
+    }
+
+  };
 
   return (
     <div className="formpage">
